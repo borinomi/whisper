@@ -96,7 +96,12 @@ def run_whisper_cli():
 
     writer_options["max_line_count"] = int(get_user_input("자막당 최대 줄 수", "1"))
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    if torch.cuda.is_available():
+        device = "cuda"
+    elif torch.backends.mps.is_available():
+        device = "mps"
+    else:
+        device = "cpu"
     print(f"\n모델 로딩 중... (Device: {device})")
 
     model = whisper.load_model("turbo", device=device)
